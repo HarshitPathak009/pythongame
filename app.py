@@ -12,6 +12,16 @@ class Characteristics:
         self.damage = features[0]
         self.attackSpeed = features[1]
         print(features)
+    
+    def move(self,board):
+        if(self.color == BLUE):
+            distance = 1
+        else:
+            distance = -1
+        if((self.y+distance<8 and self.y+distance>=0) and (board[self.x][self.y+distance]==0 or board[self.x][self.y+distance].cost==0)):
+            board[self.x][self.y] = 0
+            board[self.x][self.y+distance] = self
+            self.y = self.y+distance
 
 
 # class Troop(Characteristics):
@@ -61,19 +71,23 @@ class Archer(Characteristics):
         # Characteristics.__init__(p)
     
     #attack
-    def attack():
-        block = 1
+    def attack(self,board):
+        #ToDo-> add the concept of ismoving to void attacking when player moves
+        if(self.y+1<8 and self.color==BLUE and board[self.x][self.y+1]!=0):
+            if(board[self.x][self.y+1].color == RED):
+                if(board[self.x][self.y+1].cost<=0):
+                    board[self.x][self.y+1].cost=0
+                else:
+                    board[self.x][self.y+1].cost-=1
+        if(self.y-1>=0 and self.color==RED and board[self.x][self.y-1]!=0):
+            if(board[self.x][self.y-1].color == BLUE):
+                if(board[self.x][self.y-1].cost<=0):
+                    board[self.x][self.y-1].cost=0
+                else:
+                    board[self.x][self.y-1].cost-=1
         
     #move
-    def move(self,board):
-        if(self.color == BLUE):
-            distance = 1
-        else:
-            distance = -1
-        if((self.y+distance<8 and self.y+distance>=0) and board[self.x][self.y+distance]==0):
-            board[self.x][self.y] = 0
-            board[self.x][self.y+distance] = self
-            self.y = self.y+distance
+    
             
 
     #health
@@ -167,11 +181,12 @@ def main():
             for i in range(8):
                 for j in range(8):
                     if(board[i][j]!=0):
+                        board[i][j].attack(board)
                         board[i][j].move(board)
             print_board(board)
             moves+=1
             time.sleep(1)
-            break
+            
     else:
         print("Wrong Configuration")
     
