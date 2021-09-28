@@ -29,14 +29,25 @@ class Troop(Characteristics):
     def __init__(self, x, y, color):
         super().__init__(x,y, color)
         self.damage = 1
-        self.attackDistance = 0
+        self.attackDistance = 1
         self.movementDistance = 2
         self.cost = TROOP_COST
         self.health = TROOP_COST
         self.isMovable = True
     
     def attack(self,board):
-        pass
+        if(self.y+self.attackDistance<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance]!=0):
+            if(board[self.x][self.y+self.attackDistance].color == RED):
+                if(board[self.x][self.y+self.attackDistance].health<=0):
+                    board[self.x][self.y+self.attackDistance].health=0
+                else:
+                    board[self.x][self.y+self.attackDistance].health-=self.damage
+        if(self.y-self.attackDistance>=0 and self.color==RED and board[self.x][self.y-self.attackDistance]!=0):
+            if(board[self.x][self.y-self.attackDistance].color == BLUE):
+                if(board[self.x][self.y-self.attackDistance].health<=0):
+                    board[self.x][self.y-self.attackDistance].health=0
+                else:
+                    board[self.x][self.y-self.attackDistance].health-=self.damage
 
         
     #move
@@ -49,8 +60,8 @@ class Troop(Characteristics):
 class Cannon(Characteristics):
     def __init__(self, x,y,color):
         super().__init__(x,y, color)
-        self.damage = 1
-        self.attackDistance = 0
+        self.damage = 2
+        self.attackDistance = 4
         self.movementDistance = 0
         self.cost = CANNON_COST
         self.health = CANNON_COST
@@ -58,7 +69,36 @@ class Cannon(Characteristics):
     
     #attack
     def attack(self, board):
-        pass
+
+        #Team Blue
+        if(self.y+self.attackDistance<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance]!=0):
+            if(board[self.x][self.y+self.attackDistance].color == RED):
+                if(board[self.x][self.y+self.attackDistance].health<=0):
+                    board[self.x][self.y+self.attackDistance].health=0
+                else:
+                    board[self.x][self.y+self.attackDistance].health-=self.damage
+        #Cannon can attack on +1 range
+        if(self.y+self.attackDistance+1<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance+1]!=0):
+            if(board[self.x][self.y+self.attackDistance+1].color == RED):
+                if(board[self.x][self.y+self.attackDistance+1].health<=0):
+                    board[self.x][self.y+self.attackDistance+1].health=0
+                else:
+                    board[self.x][self.y+self.attackDistance+1].health-=self.damage
+        
+        
+        #Team Red
+        if(self.y-self.attackDistance>=0 and self.color==RED and board[self.x][self.y-self.attackDistance]!=0):
+            if(board[self.x][self.y-self.attackDistance].color == BLUE):
+                if(board[self.x][self.y-self.attackDistance].health<=0):
+                    board[self.x][self.y-self.attackDistance].health=0
+                else:
+                    board[self.x][self.y-self.attackDistance].health-=self.damage
+        if(self.y-self.attackDistance-1>=0 and self.color==RED and board[self.x][self.y-self.attackDistance-1]!=0):
+            if(board[self.x][self.y-self.attackDistance-1].color == BLUE):
+                if(board[self.x][self.y-self.attackDistance-1].health<=0):
+                    board[self.x][self.y-self.attackDistance-1].health=0
+                else:
+                    board[self.x][self.y-self.attackDistance-1].health-=self.damage
         
     #move
 
@@ -71,7 +111,7 @@ class Archer(Characteristics):
     def __init__(self, x, y, color):
         super().__init__(x,y, color)
         self.damage = 1
-        self.attackDistance = 0
+        self.attackDistance = 2
         self.movementDistance = 1
         self.cost = ARCHER_COST
         self.health = ARCHER_COST
@@ -81,19 +121,18 @@ class Archer(Characteristics):
     
     #attack
     def attack(self,board):
-        #ToDo-> add the concept of ismoving to void attacking when player moves
-        if(self.y+1<8 and self.color==BLUE and board[self.x][self.y+1]!=0):
-            if(board[self.x][self.y+1].color == RED):
-                if(board[self.x][self.y+1].health<=0):
-                    board[self.x][self.y+1].health=0
+        if(self.y+self.attackDistance<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance]!=0):
+            if(board[self.x][self.y+self.attackDistance].color == RED):
+                if(board[self.x][self.y+self.attackDistance].health<=0):
+                    board[self.x][self.y+self.attackDistance].health=0
                 else:
-                    board[self.x][self.y+1].health-=1
-        if(self.y-1>=0 and self.color==RED and board[self.x][self.y-1]!=0):
-            if(board[self.x][self.y-1].color == BLUE):
-                if(board[self.x][self.y-1].health<=0):
-                    board[self.x][self.y-1].health=0
+                    board[self.x][self.y+self.attackDistance].health-=self.damage
+        if(self.y-self.attackDistance>=0 and self.color==RED and board[self.x][self.y-self.attackDistance]!=0):
+            if(board[self.x][self.y-self.attackDistance].color == BLUE):
+                if(board[self.x][self.y-self.attackDistance].health<=0):
+                    board[self.x][self.y-self.attackDistance].health=0
                 else:
-                    board[self.x][self.y-1].health-=1
+                    board[self.x][self.y-self.attackDistance].health-=self.damage
         
 
 def print_board(board):
