@@ -9,9 +9,17 @@ from const import BLUE, RED, TEAM_BLUE, TEAM_RED, ARCHER_COST, TROOP_COST, CANNO
 class Characteristics:
     def __init__(self, *features):
         print(features)
-        self.damage = features[0]
-        self.attackSpeed = features[1]
-        print(features)
+        self.x = features[0]
+        self.y = features[1]
+        self.color = features[2]
+        self.damage = 1
+        self.attackSpeed = 0
+        self.movementSpeed = 0
+        self.cost = ARCHER_COST
+        self.health = 0
+        self.isMovable = False
+        self.isDestroyed = False
+
     
     def move(self,board):
         if(self.color == BLUE):
@@ -62,13 +70,8 @@ class Characteristics:
 
 
 class Archer(Characteristics):
-    def __init__(self, *p):
-        print(p)
-        self.x = p[0]
-        self.y = p[1]
-        self.color = p[2]
-        self.cost = ARCHER_COST
-        # Characteristics.__init__(p)
+    def __init__(*p):
+        Characteristics.__init__(*p)
     
     #attack
     def attack(self,board):
@@ -86,13 +89,6 @@ class Archer(Characteristics):
                 else:
                     board[self.x][self.y-1].cost-=1
         
-    #move
-    
-            
-
-    #health
-
-    #destroy
 
 def print_board(board):
     for i in range(8):
@@ -182,7 +178,8 @@ def main():
                 for j in range(8):
                     if(board[i][j]!=0):
                         board[i][j].attack(board)
-                        board[i][j].move(board)
+                        if(board[i][j].isMovable):
+                            board[i][j].move(board)
             print_board(board)
             moves+=1
             time.sleep(1)
