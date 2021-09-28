@@ -23,6 +23,8 @@ class Characteristics:
             board[self.x][self.y] = 0
             board[self.x][self.y+distance] = self
             self.y = self.y+distance
+            return True
+        return False
 
 
 class Troop(Characteristics):
@@ -247,12 +249,18 @@ def main():
     while(time.time() < endTime):
         os.system('cls' if os.name == 'nt' else 'clear')
         print(moves)
-        for i in range(8):
-            for j in range(8):
+        i = 0
+        j = 0
+        while(i < 8):
+            j=0
+            while(j < 8):
                 if(board[i][j]!=0):
                     board[i][j].attack(board)
                     if(board[i][j].isMovable == True):
-                        board[i][j].move(board)
+                        if(board[i][j].move(board) == True):
+                            j+=1
+                j+=1
+            i+=1
         print_board(board)
         moves+=1
         time.sleep(1)
