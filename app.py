@@ -3,29 +3,22 @@ import os
 
 
 from test_cases import cases as case
-from const import BLUE, RED, TEAM_BLUE, TEAM_RED, ARCHER_COST, TROOP_COST, CANNON_COST
+from const import BLUE, RED, TEAM_BLUE, TEAM_RED, ARCHER_COST, TROOP_COST, CANNON_COST, ARCHER_HEALTH
 
 
 class Characteristics:
-    def __init__(self, *features):
-        print(features)
-        self.x = features[0]
-        self.y = features[1]
-        self.color = features[2]
-        self.damage = 1
-        self.attackSpeed = 0
-        self.movementSpeed = 0
-        self.cost = ARCHER_COST
-        self.health = 0
-        self.isMovable = False
-        self.isDestroyed = False
+    def __init__(self, x, y, color):
+        # print(features)
+        self.x = x
+        self.y = y
+        self.color = color
 
     
     def move(self,board):
         if(self.color == BLUE):
-            distance = 1
+            distance = self.movementSpeed * 1
         else:
-            distance = -1
+            distance = self.movementSpeed * -1
         if((self.y+distance<8 and self.y+distance>=0) and (board[self.x][self.y+distance]==0 or board[self.x][self.y+distance].cost==0)):
             board[self.x][self.y] = 0
             board[self.x][self.y+distance] = self
@@ -33,10 +26,7 @@ class Characteristics:
 
 
 # class Troop(Characteristics):
-#     def __init__(self, *p):
-#         print(p)
-#         self.x = p[0]
-#         self.y = p[1]
+#     def __init__(*p):
 #         Characteristics.__init__(p)
     
 #     #attack
@@ -70,8 +60,17 @@ class Characteristics:
 
 
 class Archer(Characteristics):
-    def __init__(*p):
-        Characteristics.__init__(*p)
+    def __init__(self, x, y, color):
+        super().__init__(x,y, color)
+        self.damage = 1
+        self.attackSpeed = 0
+        self.movementSpeed = 0
+        self.cost = ARCHER_COST
+        self.health = ARCHER_HEALTH
+        self.isMovable = True
+        self.isDestroyed = False
+        
+
     
     #attack
     def attack(self,board):
@@ -178,7 +177,7 @@ def main():
                 for j in range(8):
                     if(board[i][j]!=0):
                         board[i][j].attack(board)
-                        if(board[i][j].isMovable):
+                        if(board[i][j].isMovable == True):
                             board[i][j].move(board)
             print_board(board)
             moves+=1
