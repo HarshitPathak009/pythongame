@@ -17,9 +17,14 @@ class Characteristics:
     def move(self,board):
         if(self.color == BLUE):
             distance = self.movementDistance * 1
+            distance = min(distance, 8-self.y)
         else:
             distance = self.movementDistance * -1
-        if((self.y+distance<8 and self.y+distance>=0) and (board[self.x][self.y+distance]==0 or board[self.x][self.y+distance].health==0)):
+            distance = -min(-distance, self.y)
+        
+        if((self.y+distance<8 and self.y+distance>=0) and 
+        
+        (board[self.x][self.y+distance]==0 or board[self.x][self.y+distance].health==0)):
             board[self.x][self.y] = 0
             board[self.x][self.y+distance] = self
             self.y = self.y+distance
@@ -38,13 +43,20 @@ class Troop(Characteristics):
         self.isMovable = True
     
     def attack(self,board):
-        if(self.y+self.attackDistance<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance]!=0):
+        if(self.y+self.attackDistance<8 and 
+        self.color==BLUE and 
+        board[self.x][self.y+self.attackDistance]!=0):
+
             if(board[self.x][self.y+self.attackDistance].color == RED):
                 if(board[self.x][self.y+self.attackDistance].health<=0):
                     board[self.x][self.y+self.attackDistance].health=0
                 else:
                     board[self.x][self.y+self.attackDistance].health-=self.damage
-        if(self.y-self.attackDistance>=0 and self.color==RED and board[self.x][self.y-self.attackDistance]!=0):
+        
+        if(self.y-self.attackDistance>=0 and 
+        self.color==RED and 
+        board[self.x][self.y-self.attackDistance]!=0):
+
             if(board[self.x][self.y-self.attackDistance].color == BLUE):
                 if(board[self.x][self.y-self.attackDistance].health<=0):
                     board[self.x][self.y-self.attackDistance].health=0
@@ -73,14 +85,21 @@ class Cannon(Characteristics):
     def attack(self, board):
 
         #Team Blue
-        if(self.y+self.attackDistance<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance]!=0):
+        if(self.y+self.attackDistance<8 and 
+        self.color==BLUE and 
+        board[self.x][self.y+self.attackDistance]!=0):
+
             if(board[self.x][self.y+self.attackDistance].color == RED):
                 if(board[self.x][self.y+self.attackDistance].health<=0):
                     board[self.x][self.y+self.attackDistance].health=0
                 else:
                     board[self.x][self.y+self.attackDistance].health-=self.damage
         #Cannon can attack on +1 range
-        if(self.y+self.attackDistance+1<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance+1]!=0):
+        
+        if(self.y+self.attackDistance+1<8 and 
+        self.color==BLUE and 
+        board[self.x][self.y+self.attackDistance+1]!=0):
+
             if(board[self.x][self.y+self.attackDistance+1].color == RED):
                 if(board[self.x][self.y+self.attackDistance+1].health<=0):
                     board[self.x][self.y+self.attackDistance+1].health=0
@@ -89,13 +108,19 @@ class Cannon(Characteristics):
         
         
         #Team Red
-        if(self.y-self.attackDistance>=0 and self.color==RED and board[self.x][self.y-self.attackDistance]!=0):
+        if(self.y-self.attackDistance>=0 and 
+        self.color==RED and 
+        board[self.x][self.y-self.attackDistance]!=0):
+            
             if(board[self.x][self.y-self.attackDistance].color == BLUE):
                 if(board[self.x][self.y-self.attackDistance].health<=0):
                     board[self.x][self.y-self.attackDistance].health=0
                 else:
                     board[self.x][self.y-self.attackDistance].health-=self.damage
-        if(self.y-self.attackDistance-1>=0 and self.color==RED and board[self.x][self.y-self.attackDistance-1]!=0):
+        
+        if(self.y-self.attackDistance-1>=0 and 
+        self.color==RED and 
+        board[self.x][self.y-self.attackDistance-1]!=0):
             if(board[self.x][self.y-self.attackDistance-1].color == BLUE):
                 if(board[self.x][self.y-self.attackDistance-1].health<=0):
                     board[self.x][self.y-self.attackDistance-1].health=0
@@ -123,13 +148,20 @@ class Archer(Characteristics):
     
     #attack
     def attack(self,board):
-        if(self.y+self.attackDistance<8 and self.color==BLUE and board[self.x][self.y+self.attackDistance]!=0):
+        if(self.y+self.attackDistance<8 and 
+        self.color==BLUE and 
+        board[self.x][self.y+self.attackDistance]!=0):
+
             if(board[self.x][self.y+self.attackDistance].color == RED):
                 if(board[self.x][self.y+self.attackDistance].health<=0):
                     board[self.x][self.y+self.attackDistance].health=0
                 else:
                     board[self.x][self.y+self.attackDistance].health-=self.damage
-        if(self.y-self.attackDistance>=0 and self.color==RED and board[self.x][self.y-self.attackDistance]!=0):
+
+        if(self.y-self.attackDistance>=0 and 
+        self.color==RED and 
+        board[self.x][self.y-self.attackDistance]!=0):
+
             if(board[self.x][self.y-self.attackDistance].color == BLUE):
                 if(board[self.x][self.y-self.attackDistance].health<=0):
                     board[self.x][self.y-self.attackDistance].health=0
@@ -179,22 +211,27 @@ def set_board(board):
             print("Please enter the given options")
             continue
         x, y = map(int,input("Enter the position of character").strip().split())
+        
         if(name == 1):
             if(y<=3 and board[x][y]==0 and cost+TROOP_COST<=TEAM_BLUE):
                 a = Troop(x,y,BLUE)
                 board[x][y] = a
                 cost+= TROOP_COST
+        
         elif(name ==2):
             if(y<=3 and board[x][y]==0 and cost+ARCHER_COST<=TEAM_BLUE):
                 a = Archer(x,y,BLUE)
                 board[x][y] = a
                 cost+= ARCHER_COST
+        
         else:
             if(y<=3 and board[x][y]==0 and cost+CANNON_COST<=TEAM_BLUE):
                 a = Cannon(x,y,BLUE)
                 board[x][y] = a
                 cost+= CANNON_COST
+        
         print("Remaining Cost = ", TEAM_BLUE-cost)
+        
         if(cost == TEAM_BLUE):
             break
 
@@ -207,22 +244,27 @@ def set_board(board):
             print("Please enter the given options")
             continue
         x, y = map(int,input("Enter the position of character").strip().split())
+        
         if(name == 1):
             if(y>3 and board[x][y]==0 and cost+TROOP_COST<=TEAM_RED):
                 a = Troop(x,y,RED)
                 board[x][y] = a
                 cost+= TROOP_COST
+        
         elif(name ==2):
             if(y>3 and board[x][y]==0 and cost+ARCHER_COST<=TEAM_RED):
                 a = Archer(x,y,RED)
                 board[x][y] = a
                 cost+= ARCHER_COST
+        
         else:
             if(y>3 and board[x][y]==0 and cost+CANNON_COST<=TEAM_RED):
                 a = Cannon(x,y,RED)
                 board[x][y] = a
                 cost+= CANNON_COST
+        
         print("Remaining Cost = ", TEAM_RED-cost)
+        
         if(cost == TEAM_RED):
             break
 
@@ -251,19 +293,28 @@ def main():
         print(moves)
         i = 0
         j = 0
+        
         while(i < 8):
             j=0
+        
             while(j < 8):
+        
                 if(board[i][j]!=0):
                     board[i][j].attack(board)
+        
                     if(board[i][j].isMovable == True):
+        
                         if(board[i][j].move(board) == True):
                             j+=1
+        
                 j+=1
+        
             i+=1
+        
         print_board(board)
         moves+=1
         time.sleep(1)
+    
     Winner(board)
     
     
