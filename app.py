@@ -17,7 +17,7 @@ class Characteristics:
     def move(self,board):
         if(self.color == BLUE):
             distance = self.movementDistance * 1
-            distance = min(distance, 8-self.y)
+            distance = min(distance, 8-self.y-1)
         else:
             distance = self.movementDistance * -1
             distance = -min(-distance, self.y)
@@ -28,7 +28,7 @@ class Characteristics:
             board[self.x][self.y] = 0
             board[self.x][self.y+distance] = self
             self.y = self.y+distance
-            return True
+            return distance
         return False
 
 
@@ -209,6 +209,7 @@ def set_board(board):
         name = int(input("Enter 1 for Troops, 2 for Archer, 3 for Cannon"))
         if(name>3 or name<=0):
             print("Please enter the given options")
+            
             continue
         x, y = map(int,input("Enter the position of character").strip().split())
         
@@ -303,9 +304,9 @@ def main():
                     board[i][j].attack(board)
         
                     if(board[i][j].isMovable == True):
-        
-                        if(board[i][j].move(board) == True):
-                            j+=1
+                        distance = board[i][j].move(board)
+                        if( distance!= False):
+                            j+=distance+1
         
                 j+=1
         
