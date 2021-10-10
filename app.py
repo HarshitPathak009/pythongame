@@ -6,6 +6,11 @@ from test_cases import cases as case
 from const import BLUE, RED, TEAM_BLUE, TEAM_RED, ARCHER_COST, TROOP_COST, CANNON_COST, ARCHER_HEALTH
 
 
+#movementDistance = number of blocks the character will cover in 1 sec
+#damage = the amount of damage caused by the character
+#attackDistance = the number of blocks that will take damages
+#
+
 class Characteristics:
     def __init__(self, x, y, color):
         # print(features)
@@ -15,12 +20,24 @@ class Characteristics:
 
     
     def move(self,board):
+        # If the character is of blue team then the player moves in forward direction
         if(self.color == BLUE):
             distance = self.movementDistance * 1
             distance = min(distance, 8-self.y-1)
+            m = distance
+            for i in range(0,m+1):
+                if(board[self.x][self.y+i]==0):
+                    distance = i
+        # If the character is of red team it will move in backward direction
+
         else:
             distance = self.movementDistance * -1
             distance = -min(-distance, self.y)
+            m = -1*distance
+            for i in range(0,m+1):
+                if(board[self.x][self.y-i]==0):
+                    distance = i
+            distance = -1*distance
         
         if((self.y+distance<8 and self.y+distance>=0) and 
         
