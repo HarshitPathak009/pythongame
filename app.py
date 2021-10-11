@@ -25,18 +25,19 @@ class Characteristics:
             distance = self.movementDistance * 1
             distance = min(distance, 8-self.y-1)
             m = distance
-            for i in range(0,m+1):
-                if(board[self.x][self.y+i]==0):
-                    distance = i
+            for i in range(1,m+1):
+                if(board[self.x][self.y+i]!=0):
+                    distance = i-1
         # If the character is of red team it will move in backward direction
 
         else:
             distance = self.movementDistance * -1
             distance = -min(-distance, self.y)
             m = -1*distance
-            for i in range(0,m+1):
-                if(board[self.x][self.y-i]==0):
-                    distance = i
+            for i in range(1,m+1):
+                if(board[self.x][self.y-i]!=0):
+                    distance = i-1
+                    break
             distance = -1*distance
         
         if((self.y+distance<8 and self.y+distance>=0) and 
