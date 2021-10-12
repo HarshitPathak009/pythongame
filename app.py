@@ -27,9 +27,9 @@ class Characteristics:
             m = distance
             for i in range(1,m+1):
                 if(board[self.x][self.y+i]!=0):
-                    distance = i-1
+                    distance = i
+        
         # If the character is of red team it will move in backward direction
-
         else:
             distance = self.movementDistance * -1
             distance = -min(-distance, self.y)
@@ -41,12 +41,12 @@ class Characteristics:
             distance = -1*distance
         
         if((self.y+distance<8 and self.y+distance>=0) and 
-        
         (board[self.x][self.y+distance]==0 or board[self.x][self.y+distance].health==0)):
             board[self.x][self.y] = 0
             board[self.x][self.y+distance] = self
             self.y = self.y+distance
             return distance
+
         return False
 
 
@@ -66,27 +66,31 @@ class Troop(Characteristics):
         board[self.x][self.y+self.attackDistance]!=0):
 
             if(board[self.x][self.y+self.attackDistance].color == RED):
+                
                 if(board[self.x][self.y+self.attackDistance].health<=0):
                     board[self.x][self.y+self.attackDistance].health=0
+                    return False
+                
                 else:
                     board[self.x][self.y+self.attackDistance].health-=self.damage
+            return True
         
         if(self.y-self.attackDistance>=0 and 
         self.color==RED and 
         board[self.x][self.y-self.attackDistance]!=0):
 
             if(board[self.x][self.y-self.attackDistance].color == BLUE):
+                
                 if(board[self.x][self.y-self.attackDistance].health<=0):
                     board[self.x][self.y-self.attackDistance].health=0
+                    return False
+                
                 else:
                     board[self.x][self.y-self.attackDistance].health-=self.damage
+            return True
 
-        
-    #move
+        return False
 
-    #health
-
-    #destroy
 
 
 class Cannon(Characteristics):
@@ -108,10 +112,12 @@ class Cannon(Characteristics):
         board[self.x][self.y+self.attackDistance]!=0):
 
             if(board[self.x][self.y+self.attackDistance].color == RED):
+                
                 if(board[self.x][self.y+self.attackDistance].health<=0):
                     board[self.x][self.y+self.attackDistance].health=0
                 else:
                     board[self.x][self.y+self.attackDistance].health-=self.damage
+                # return True
         #Cannon can attack on +1 range
         
         if(self.y+self.attackDistance+1<8 and 
@@ -119,8 +125,10 @@ class Cannon(Characteristics):
         board[self.x][self.y+self.attackDistance+1]!=0):
 
             if(board[self.x][self.y+self.attackDistance+1].color == RED):
+                
                 if(board[self.x][self.y+self.attackDistance+1].health<=0):
                     board[self.x][self.y+self.attackDistance+1].health=0
+                
                 else:
                     board[self.x][self.y+self.attackDistance+1].health-=self.damage
         
@@ -131,8 +139,10 @@ class Cannon(Characteristics):
         board[self.x][self.y-self.attackDistance]!=0):
             
             if(board[self.x][self.y-self.attackDistance].color == BLUE):
+                
                 if(board[self.x][self.y-self.attackDistance].health<=0):
                     board[self.x][self.y-self.attackDistance].health=0
+                
                 else:
                     board[self.x][self.y-self.attackDistance].health-=self.damage
         
@@ -140,10 +150,13 @@ class Cannon(Characteristics):
         self.color==RED and 
         board[self.x][self.y-self.attackDistance-1]!=0):
             if(board[self.x][self.y-self.attackDistance-1].color == BLUE):
+                
                 if(board[self.x][self.y-self.attackDistance-1].health<=0):
                     board[self.x][self.y-self.attackDistance-1].health=0
+                
                 else:
                     board[self.x][self.y-self.attackDistance-1].health-=self.damage
+        return False
         
     #move
 
@@ -173,8 +186,10 @@ class Archer(Characteristics):
             if(board[self.x][self.y+self.attackDistance].color == RED):
                 if(board[self.x][self.y+self.attackDistance].health<=0):
                     board[self.x][self.y+self.attackDistance].health=0
+                    return False
                 else:
                     board[self.x][self.y+self.attackDistance].health-=self.damage
+                return True
 
         if(self.y-self.attackDistance>=0 and 
         self.color==RED and 
@@ -183,8 +198,12 @@ class Archer(Characteristics):
             if(board[self.x][self.y-self.attackDistance].color == BLUE):
                 if(board[self.x][self.y-self.attackDistance].health<=0):
                     board[self.x][self.y-self.attackDistance].health=0
+                    return False
                 else:
                     board[self.x][self.y-self.attackDistance].health-=self.damage
+                return True
+        return False
+
         
 
 def print_board(board):
@@ -319,9 +338,10 @@ def main():
             while(j < 8):
         
                 if(board[i][j]!=0):
-                    board[i][j].attack(board)
-        
-                    if(board[i][j].isMovable == True):
+                    flg = board[i][j].attack(board)
+                    # board[i][j].attack(board)
+                    if(board[i][j].isMovable == True and flg == False):
+                        # print(flg)
                         distance = board[i][j].move(board)
                         if( distance!= False):
                             j+=distance+1
